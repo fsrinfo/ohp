@@ -11,11 +11,27 @@
 		el: '.posts',
 		initialize: function () {
 			_.bindAll(this);
-			this.postCollection = new PostCollection();
-			_.bindAll(this.postCollection.this);
-			this.listenTo(this.postCollection, 'add', function (post) {
-				$(this.el).append('<div>' + post.get('text') + '</div>');
+			
+			this.postCollection = new PostCollection;
+			
+			
+			this.postCollection.fetch({
+				add: true,
+				success: function(posts) {
+				    console.log(posts);
+				},
 			});
+			
+			this.listenTo(this.postCollection, 'add', function (post) {
+				if(this.lastid < post.get('id'))
+					$(this.el).prepend('<div>' + post.get('username') + ": " + post.get('text') + " (" + post.get('datetime') + ")" + '</div>');
+				else
+					$(this.el).append('<div>' + post.get('username') + ": " + post.get('text') + " (" + post.get('datetime') + ")" + '</div>');
+				this.lastid = post.get('id')
+			});
+			
+			this.lastid = -1
+			
 		},
 		render: function () {
 			this.loadPosts();
@@ -28,7 +44,7 @@
 				merge: true,
 				reset: false,
 			});
-		}
+		},
 	});
 	
 	var postView = new PostView();

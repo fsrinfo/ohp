@@ -1,14 +1,21 @@
 from django.conf.urls import patterns, include, url
 
-from rest_framework import viewsets, routers
+from rest_framework import viewsets, routers, serializers
 
 from wall.models import Post
 
 from django.contrib import admin
 admin.autodiscover()
 
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id', 'text', 'datetime', 'username')
+
 class PostViewSet(viewsets.ModelViewSet):
-    model = Post
+	queryset = Post.objects.all().reverse()
+	serializer_class = PostSerializer
+	
 
 router = routers.DefaultRouter()
 router.register(r'post',PostViewSet)
