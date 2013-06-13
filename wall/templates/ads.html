@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>OHP Wall</title>
+	<title>OHP Ads</title>
 		<meta name="csrf-token" content="{{csrf_token}}">
 	</head>
 	<body>
@@ -12,6 +12,15 @@
 		<script type="text/javascript" src="{{STATIC_URL}}jquery-2.0.2.min.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}underscore-min.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}backbone-min.js"></script>
-		<script type="text/javascript" src="{{STATIC_URL}}wall.js"></script>
+		<script type="text/javascript">
+			AdsCollection = new Backbone.Collection();
+			
+			AdsCollection.add([
+			{% for ad in ads %}
+			{ path:	"{{ad.path}}", type: "{{ad.type}}" },
+			{% endfor %}
+			]);
+			
+		</script>
 	</body>
 </html>

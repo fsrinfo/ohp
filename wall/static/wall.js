@@ -22,16 +22,16 @@
 				},
 			});
 			
-			this.listenTo(this.postCollection, 'add', function (post) {
-				if(this.lastid < post.get('id'))
-					$(this.el).prepend('<div>' + post.get('username') + ": " + post.get('text') + " (" + post.get('datetime') + ")" + '</div>');
-				else
-					$(this.el).append('<div>' + post.get('username') + ": " + post.get('text') + " (" + post.get('datetime') + ")" + '</div>');
-				this.lastid = post.get('id')
+			this.listenTo(this.postCollection, 'add', this.appendPosts);
+			
+			
+			
+			this.listenTo(this.postCollection, 'sync', function () {
+				this.stopListening(this.postCollection, 'add');
+				this.stopListening(this.postCollection, 'sync');
+				this.listenTo(this.postCollection, 'add', this.prependPosts);
+				setInterval(this.render, 2000);
 			});
-			
-			this.lastid = -1
-			
 		},
 		render: function () {
 			this.loadPosts();
@@ -45,8 +45,15 @@
 				reset: false,
 			});
 		},
+		prependPosts: function (post) {
+				var msg = $('<div id="'+post.get('id')+'">' + post.get('username') + ": " + post.get('text') + '</div>')
+				$(this.el).prepend(msg);
+		},
+		appendPosts: function (post) {
+				var msg = $('<div id="'+post.get('id')+'">' + post.get('username') + ": " + post.get('text') + '</div>')
+				$(this.el).append(msg);
+		},
 	});
 	
 	var postView = new PostView();
-	setInterval(postView.render, 1000);
 }) (jQuery);

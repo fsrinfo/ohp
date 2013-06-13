@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
     
-    'PAGINATE_BY': 10,
+    'PAGINATE_BY': 20,
     'PAGINATE_BY_PARAM': 'page_size' 
 }
 
